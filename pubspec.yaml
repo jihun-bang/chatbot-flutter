@@ -17,6 +17,9 @@ dependencies:
   device_info_plus: ^9.0.3
   firebase_database: ^10.2.4
   cloud_firestore: ^4.8.4
+  dartz: ^0.10.1
+  logger: ^2.0.1
+  firebase_crashlytics: ^3.3.4
 
 dev_dependencies:
   flutter_test:
