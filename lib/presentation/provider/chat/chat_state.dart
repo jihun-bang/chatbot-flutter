@@ -7,11 +7,9 @@ class Loading extends ChatState {}
 class Error extends ChatState {}
 
 class ChatHistory extends ChatState {
-  final List<MessageModel> userMessages;
-  final List<MessageModel> aiMessages;
+  final List<MessageModel> messages;
 
   ChatHistory({
-    required this.userMessages,
-    required this.aiMessages,
+    required this.messages,
   });
 }
