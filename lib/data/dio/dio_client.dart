@@ -53,7 +53,7 @@ class DioClient with FirebaseCrashLogger {
       nonFatalError(error: e, stackTrace: stackTrace);
       return Left(
         ServerFailure(
-          e.response?.data['error'] as String? ?? e.message,
+          e.response?.data['message'] as String? ?? e.message,
         ),
       );
     }
@@ -80,7 +80,7 @@ class DioClient with FirebaseCrashLogger {
       nonFatalError(error: e, stackTrace: stackTrace);
       return Left(
         ServerFailure(
-          e.response?.data['error'] as String? ?? e.message,
+          e.response?.data['message'] as String? ?? e.message,
         ),
       );
     }

@@ -17,10 +17,10 @@ class ChatRemoteDatasourceImpl implements ChatRemoteDatasource {
 
   @override
   Future<Either<Failure, ChatResponseModel>> chat(
-      ChatRequestModel registerParams) async {
+      ChatRequestModel params) async {
     final response = await _client.postRequest(
       ListAPI.chat,
-      data: registerParams.toJson(),
+      data: params.toJson(),
       converter: (response) =>
           ChatResponseModel.fromJson(response as Map<String, dynamic>),
     );
