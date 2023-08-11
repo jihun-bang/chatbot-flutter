@@ -12,9 +12,13 @@ class ChatRequestModel {
   /// 사용자 ID
   String userId;
 
+  @JsonKey(name: 'question')
+  String message;
+
   ChatRequestModel({
     required this.id,
     required this.userId,
+    required this.message,
   });
 
   factory ChatRequestModel.fromJson(Map<String, dynamic> json) =>
