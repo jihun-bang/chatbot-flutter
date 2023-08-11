@@ -46,20 +46,25 @@ class _ChatPageState extends State<ChatPage> {
   }
 
   Widget get _chatHistory {
+    final state = (_provider.state as ChatHistory);
     return ListView.builder(
       itemBuilder: (_, index) {
-        final state = (_provider.state as ChatHistory);
         final message = state.messages[index];
-        final alignment = state.messages[index].type == MessageType.ai
-            ? Alignment.centerLeft
-            : Alignment.centerRight;
+        final isAi = state.messages[index].type == MessageType.ai;
+        final color = isAi ? Colors.black87 : Colors.black54;
 
         return Container(
-          alignment: alignment,
+          color: color,
+          alignment: Alignment.centerLeft,
+          padding: const EdgeInsets.all(18),
           child: Text(message.data.content,
-              style: Theme.of(context).textTheme.bodyMedium),
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium
+                  ?.copyWith(color: Colors.white)),
         );
       },
+      itemCount: state.messages.length,
     );
   }
 }

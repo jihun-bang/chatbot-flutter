@@ -32,7 +32,7 @@ class ChatHistoryModel {
   Map<String, dynamic> toJson() => _$ChatHistoryModelToJson(this);
 }
 
-@JsonSerializable(explicitToJson: true, fieldRename: FieldRename.snake)
+@JsonSerializable(explicitToJson: true)
 class MessageModel {
   /// 메시지 ID
   @Id()
@@ -85,6 +85,6 @@ class MessageDataModel {
 
 enum MessageType { ai, human }
 
-@Collection<MessageModel>('messages')
+@Collection<MessageModel>('chat_history/*/messages')
 @Collection<ChatHistoryModel>('chat_history')
 final chatHistoryRef = ChatHistoryModelCollectionReference();

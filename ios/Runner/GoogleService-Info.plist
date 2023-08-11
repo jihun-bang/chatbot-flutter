@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>219036839161-58p3sapvctlvg8t2unpm0kojmakro1kp.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.219036839161-58p3sapvctlvg8t2unpm0kojmakro1kp</string>
+	<key>API_KEY</key>
+	<string>AIzaSyBbwg9V_1yIPyzQ8-TqOi3GT1DzbhRi5k4</string>
+	<key>GCM_SENDER_ID</key>
+	<string>219036839161</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.skmagic.chatbot</string>
+	<key>PROJECT_ID</key>
+	<string>skmagic-chatbot-develop</string>
+	<key>STORAGE_BUCKET</key>
+	<string>skmagic-chatbot-develop.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:219036839161:ios:12449095ecb4a573c2c628</string>
+</dict>
+</plist>

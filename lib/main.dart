@@ -2,8 +2,12 @@ import 'package:chatbot/dependencies_injection.dart';
 import 'package:chatbot/presentation/pages/chat/chat_page.dart';
 import 'package:flutter/material.dart';
 
-void main() {
+import 'common/firebase/firebase_services.dart';
+
+Future<void> main() async {
+  WidgetsFlutterBinding.ensureInitialized();
   setupLocator();
+  await FirebaseServices.init();
   runApp(const MyApp());
 }
 

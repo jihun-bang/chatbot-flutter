@@ -96,13 +96,807 @@ const _sentinel = _Sentinel();
 /// A collection reference object can be used for adding documents,
 /// getting document references, and querying for documents
 /// (using the methods inherited from Query).
+abstract class ChatHistoryModelCollectionReference
+    implements
+        ChatHistoryModelQuery,
+        FirestoreCollectionReference<ChatHistoryModel,
+            ChatHistoryModelQuerySnapshot> {
+  factory ChatHistoryModelCollectionReference([
+    FirebaseFirestore? firestore,
+  ]) = _$ChatHistoryModelCollectionReference;
+
+  static ChatHistoryModel fromFirestore(
+    DocumentSnapshot<Map<String, Object?>> snapshot,
+    SnapshotOptions? options,
+  ) {
+    return ChatHistoryModel.fromJson({'id': snapshot.id, ...?snapshot.data()});
+  }
+
+  static Map<String, Object?> toFirestore(
+    ChatHistoryModel value,
+    SetOptions? options,
+  ) {
+    return {...value.toJson()}..remove('id');
+  }
+
+  @override
+  CollectionReference<ChatHistoryModel> get reference;
+
+  @override
+  ChatHistoryModelDocumentReference doc([String? id]);
+
+  /// Add a new document to this collection with the specified data,
+  /// assigning it a document ID automatically.
+  Future<ChatHistoryModelDocumentReference> add(ChatHistoryModel value);
+}
+
+class _$ChatHistoryModelCollectionReference extends _$ChatHistoryModelQuery
+    implements ChatHistoryModelCollectionReference {
+  factory _$ChatHistoryModelCollectionReference(
+      [FirebaseFirestore? firestore]) {
+    firestore ??= FirebaseFirestore.instance;
+
+    return _$ChatHistoryModelCollectionReference._(
+      firestore.collection('chat_history').withConverter(
+            fromFirestore: ChatHistoryModelCollectionReference.fromFirestore,
+            toFirestore: ChatHistoryModelCollectionReference.toFirestore,
+          ),
+    );
+  }
+
+  _$ChatHistoryModelCollectionReference._(
+    CollectionReference<ChatHistoryModel> reference,
+  ) : super(reference, $referenceWithoutCursor: reference);
+
+  String get path => reference.path;
+
+  @override
+  CollectionReference<ChatHistoryModel> get reference =>
+      super.reference as CollectionReference<ChatHistoryModel>;
+
+  @override
+  ChatHistoryModelDocumentReference doc([String? id]) {
+    assert(
+      id == null || id.split('/').length == 1,
+      'The document ID cannot be from a different collection',
+    );
+    return ChatHistoryModelDocumentReference(
+      reference.doc(id),
+    );
+  }
+
+  @override
+  Future<ChatHistoryModelDocumentReference> add(ChatHistoryModel value) {
+    return reference
+        .add(value)
+        .then((ref) => ChatHistoryModelDocumentReference(ref));
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$ChatHistoryModelCollectionReference &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+abstract class ChatHistoryModelDocumentReference
+    extends FirestoreDocumentReference<ChatHistoryModel,
+        ChatHistoryModelDocumentSnapshot> {
+  factory ChatHistoryModelDocumentReference(
+          DocumentReference<ChatHistoryModel> reference) =
+      _$ChatHistoryModelDocumentReference;
+
+  DocumentReference<ChatHistoryModel> get reference;
+
+  /// A reference to the [ChatHistoryModelCollectionReference] containing this document.
+  ChatHistoryModelCollectionReference get parent {
+    return _$ChatHistoryModelCollectionReference(reference.firestore);
+  }
+
+  late final MessageModelCollectionReference messages =
+      _$MessageModelCollectionReference(
+    reference,
+  );
+
+  @override
+  Stream<ChatHistoryModelDocumentSnapshot> snapshots();
+
+  @override
+  Future<ChatHistoryModelDocumentSnapshot> get([GetOptions? options]);
+
+  @override
+  Future<void> delete();
+
+  /// Updates data on the document. Data will be merged with any existing
+  /// document data.
+  ///
+  /// If no document exists yet, the update will fail.
+  Future<void> update({
+    String userId,
+    FieldValue userIdFieldValue,
+  });
+
+  /// Updates fields in the current document using the transaction API.
+  ///
+  /// The update will fail if applied to a document that does not exist.
+  void transactionUpdate(
+    Transaction transaction, {
+    String userId,
+    FieldValue userIdFieldValue,
+  });
+}
+
+class _$ChatHistoryModelDocumentReference extends FirestoreDocumentReference<
+        ChatHistoryModel, ChatHistoryModelDocumentSnapshot>
+    implements ChatHistoryModelDocumentReference {
+  _$ChatHistoryModelDocumentReference(this.reference);
+
+  @override
+  final DocumentReference<ChatHistoryModel> reference;
+
+  /// A reference to the [ChatHistoryModelCollectionReference] containing this document.
+  ChatHistoryModelCollectionReference get parent {
+    return _$ChatHistoryModelCollectionReference(reference.firestore);
+  }
+
+  late final MessageModelCollectionReference messages =
+      _$MessageModelCollectionReference(
+    reference,
+  );
+
+  @override
+  Stream<ChatHistoryModelDocumentSnapshot> snapshots() {
+    return reference.snapshots().map(ChatHistoryModelDocumentSnapshot._);
+  }
+
+  @override
+  Future<ChatHistoryModelDocumentSnapshot> get([GetOptions? options]) {
+    return reference.get(options).then(ChatHistoryModelDocumentSnapshot._);
+  }
+
+  @override
+  Future<ChatHistoryModelDocumentSnapshot> transactionGet(
+      Transaction transaction) {
+    return transaction.get(reference).then(ChatHistoryModelDocumentSnapshot._);
+  }
+
+  Future<void> update({
+    Object? userId = _sentinel,
+    FieldValue? userIdFieldValue,
+  }) async {
+    assert(
+      userId == _sentinel || userIdFieldValue == null,
+      "Cannot specify both userId and userIdFieldValue",
+    );
+    final json = {
+      if (userId != _sentinel)
+        _$ChatHistoryModelFieldMap['userId']!: userId as String,
+      if (userIdFieldValue != null)
+        _$ChatHistoryModelFieldMap['userId']!: userIdFieldValue,
+    };
+
+    return reference.update(json);
+  }
+
+  void transactionUpdate(
+    Transaction transaction, {
+    Object? userId = _sentinel,
+    FieldValue? userIdFieldValue,
+  }) {
+    assert(
+      userId == _sentinel || userIdFieldValue == null,
+      "Cannot specify both userId and userIdFieldValue",
+    );
+    final json = {
+      if (userId != _sentinel)
+        _$ChatHistoryModelFieldMap['userId']!: userId as String,
+      if (userIdFieldValue != null)
+        _$ChatHistoryModelFieldMap['userId']!: userIdFieldValue,
+    };
+
+    transaction.update(reference, json);
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is ChatHistoryModelDocumentReference &&
+        other.runtimeType == runtimeType &&
+        other.parent == parent &&
+        other.id == id;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, parent, id);
+}
+
+abstract class ChatHistoryModelQuery
+    implements QueryReference<ChatHistoryModel, ChatHistoryModelQuerySnapshot> {
+  @override
+  ChatHistoryModelQuery limit(int limit);
+
+  @override
+  ChatHistoryModelQuery limitToLast(int limit);
+
+  /// Perform an order query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of order queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.orderByFieldPath(
+  ///   FieldPath.fromString('title'),
+  ///   startAt: 'title',
+  /// );
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.orderByTitle(startAt: 'title');
+  /// ```
+  ChatHistoryModelQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt,
+    Object? startAfter,
+    Object? endAt,
+    Object? endBefore,
+    ChatHistoryModelDocumentSnapshot? startAtDocument,
+    ChatHistoryModelDocumentSnapshot? endAtDocument,
+    ChatHistoryModelDocumentSnapshot? endBeforeDocument,
+    ChatHistoryModelDocumentSnapshot? startAfterDocument,
+  });
+
+  /// Perform a where query based on a [FieldPath].
+  ///
+  /// This method is considered unsafe as it does check that the field path
+  /// maps to a valid property or that parameters such as [isEqualTo] receive
+  /// a value of the correct type.
+  ///
+  /// If possible, instead use the more explicit variant of where queries:
+  ///
+  /// **AVOID**:
+  /// ```dart
+  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
+  /// ```
+  ///
+  /// **PREFER**:
+  /// ```dart
+  /// collection.whereTitle(isEqualTo: 'title');
+  /// ```
+  ChatHistoryModelQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  });
+
+  ChatHistoryModelQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
+  ChatHistoryModelQuery whereUserId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  });
+
+  ChatHistoryModelQuery orderByDocumentId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    ChatHistoryModelDocumentSnapshot? startAtDocument,
+    ChatHistoryModelDocumentSnapshot? endAtDocument,
+    ChatHistoryModelDocumentSnapshot? endBeforeDocument,
+    ChatHistoryModelDocumentSnapshot? startAfterDocument,
+  });
+
+  ChatHistoryModelQuery orderByUserId({
+    bool descending = false,
+    String startAt,
+    String startAfter,
+    String endAt,
+    String endBefore,
+    ChatHistoryModelDocumentSnapshot? startAtDocument,
+    ChatHistoryModelDocumentSnapshot? endAtDocument,
+    ChatHistoryModelDocumentSnapshot? endBeforeDocument,
+    ChatHistoryModelDocumentSnapshot? startAfterDocument,
+  });
+}
+
+class _$ChatHistoryModelQuery
+    extends QueryReference<ChatHistoryModel, ChatHistoryModelQuerySnapshot>
+    implements ChatHistoryModelQuery {
+  _$ChatHistoryModelQuery(
+    this._collection, {
+    required Query<ChatHistoryModel> $referenceWithoutCursor,
+    $QueryCursor $queryCursor = const $QueryCursor(),
+  }) : super(
+          $referenceWithoutCursor: $referenceWithoutCursor,
+          $queryCursor: $queryCursor,
+        );
+
+  final CollectionReference<Object?> _collection;
+
+  @override
+  Stream<ChatHistoryModelQuerySnapshot> snapshots([SnapshotOptions? options]) {
+    return reference
+        .snapshots()
+        .map(ChatHistoryModelQuerySnapshot._fromQuerySnapshot);
+  }
+
+  @override
+  Future<ChatHistoryModelQuerySnapshot> get([GetOptions? options]) {
+    return reference
+        .get(options)
+        .then(ChatHistoryModelQuerySnapshot._fromQuerySnapshot);
+  }
+
+  @override
+  ChatHistoryModelQuery limit(int limit) {
+    return _$ChatHistoryModelQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  @override
+  ChatHistoryModelQuery limitToLast(int limit) {
+    return _$ChatHistoryModelQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  ChatHistoryModelQuery orderByFieldPath(
+    FieldPath fieldPath, {
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ChatHistoryModelDocumentSnapshot? startAtDocument,
+    ChatHistoryModelDocumentSnapshot? endAtDocument,
+    ChatHistoryModelDocumentSnapshot? endBeforeDocument,
+    ChatHistoryModelDocumentSnapshot? startAfterDocument,
+  }) {
+    final query =
+        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+    return _$ChatHistoryModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  ChatHistoryModelQuery whereFieldPath(
+    FieldPath fieldPath, {
+    Object? isEqualTo,
+    Object? isNotEqualTo,
+    Object? isLessThan,
+    Object? isLessThanOrEqualTo,
+    Object? isGreaterThan,
+    Object? isGreaterThanOrEqualTo,
+    Object? arrayContains,
+    List<Object?>? arrayContainsAny,
+    List<Object?>? whereIn,
+    List<Object?>? whereNotIn,
+    bool? isNull,
+  }) {
+    return _$ChatHistoryModelQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        fieldPath,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        arrayContains: arrayContains,
+        arrayContainsAny: arrayContainsAny,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+        isNull: isNull,
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  ChatHistoryModelQuery whereDocumentId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$ChatHistoryModelQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        FieldPath.documentId,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  ChatHistoryModelQuery whereUserId({
+    String? isEqualTo,
+    String? isNotEqualTo,
+    String? isLessThan,
+    String? isLessThanOrEqualTo,
+    String? isGreaterThan,
+    String? isGreaterThanOrEqualTo,
+    bool? isNull,
+    List<String>? whereIn,
+    List<String>? whereNotIn,
+  }) {
+    return _$ChatHistoryModelQuery(
+      _collection,
+      $referenceWithoutCursor: $referenceWithoutCursor.where(
+        _$ChatHistoryModelFieldMap['userId']!,
+        isEqualTo: isEqualTo,
+        isNotEqualTo: isNotEqualTo,
+        isLessThan: isLessThan,
+        isLessThanOrEqualTo: isLessThanOrEqualTo,
+        isGreaterThan: isGreaterThan,
+        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
+        isNull: isNull,
+        whereIn: whereIn,
+        whereNotIn: whereNotIn,
+      ),
+      $queryCursor: $queryCursor,
+    );
+  }
+
+  ChatHistoryModelQuery orderByDocumentId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ChatHistoryModelDocumentSnapshot? startAtDocument,
+    ChatHistoryModelDocumentSnapshot? endAtDocument,
+    ChatHistoryModelDocumentSnapshot? endBeforeDocument,
+    ChatHistoryModelDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
+        descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$ChatHistoryModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  ChatHistoryModelQuery orderByUserId({
+    bool descending = false,
+    Object? startAt = _sentinel,
+    Object? startAfter = _sentinel,
+    Object? endAt = _sentinel,
+    Object? endBefore = _sentinel,
+    ChatHistoryModelDocumentSnapshot? startAtDocument,
+    ChatHistoryModelDocumentSnapshot? endAtDocument,
+    ChatHistoryModelDocumentSnapshot? endBeforeDocument,
+    ChatHistoryModelDocumentSnapshot? startAfterDocument,
+  }) {
+    final query = $referenceWithoutCursor
+        .orderBy(_$ChatHistoryModelFieldMap['userId']!, descending: descending);
+    var queryCursor = $queryCursor;
+
+    if (startAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAt: const [],
+        startAtDocumentSnapshot: startAtDocument.snapshot,
+      );
+    }
+    if (startAfterDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: const [],
+        startAfterDocumentSnapshot: startAfterDocument.snapshot,
+      );
+    }
+    if (endAtDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endAt: const [],
+        endAtDocumentSnapshot: endAtDocument.snapshot,
+      );
+    }
+    if (endBeforeDocument != null) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: const [],
+        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
+      );
+    }
+
+    if (startAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAt: [...queryCursor.startAt, startAt],
+        startAtDocumentSnapshot: null,
+      );
+    }
+    if (startAfter != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        startAfter: [...queryCursor.startAfter, startAfter],
+        startAfterDocumentSnapshot: null,
+      );
+    }
+    if (endAt != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endAt: [...queryCursor.endAt, endAt],
+        endAtDocumentSnapshot: null,
+      );
+    }
+    if (endBefore != _sentinel) {
+      queryCursor = queryCursor.copyWith(
+        endBefore: [...queryCursor.endBefore, endBefore],
+        endBeforeDocumentSnapshot: null,
+      );
+    }
+
+    return _$ChatHistoryModelQuery(
+      _collection,
+      $referenceWithoutCursor: query,
+      $queryCursor: queryCursor,
+    );
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return other is _$ChatHistoryModelQuery &&
+        other.runtimeType == runtimeType &&
+        other.reference == reference;
+  }
+
+  @override
+  int get hashCode => Object.hash(runtimeType, reference);
+}
+
+class ChatHistoryModelDocumentSnapshot
+    extends FirestoreDocumentSnapshot<ChatHistoryModel> {
+  ChatHistoryModelDocumentSnapshot._(this.snapshot) : data = snapshot.data();
+
+  @override
+  final DocumentSnapshot<ChatHistoryModel> snapshot;
+
+  @override
+  ChatHistoryModelDocumentReference get reference {
+    return ChatHistoryModelDocumentReference(
+      snapshot.reference,
+    );
+  }
+
+  @override
+  final ChatHistoryModel? data;
+}
+
+class ChatHistoryModelQuerySnapshot extends FirestoreQuerySnapshot<
+    ChatHistoryModel, ChatHistoryModelQueryDocumentSnapshot> {
+  ChatHistoryModelQuerySnapshot._(
+    this.snapshot,
+    this.docs,
+    this.docChanges,
+  );
+
+  factory ChatHistoryModelQuerySnapshot._fromQuerySnapshot(
+    QuerySnapshot<ChatHistoryModel> snapshot,
+  ) {
+    final docs =
+        snapshot.docs.map(ChatHistoryModelQueryDocumentSnapshot._).toList();
+
+    final docChanges = snapshot.docChanges.map((change) {
+      return _decodeDocumentChange(
+        change,
+        ChatHistoryModelDocumentSnapshot._,
+      );
+    }).toList();
+
+    return ChatHistoryModelQuerySnapshot._(
+      snapshot,
+      docs,
+      docChanges,
+    );
+  }
+
+  static FirestoreDocumentChange<ChatHistoryModelDocumentSnapshot>
+      _decodeDocumentChange<T>(
+    DocumentChange<T> docChange,
+    ChatHistoryModelDocumentSnapshot Function(DocumentSnapshot<T> doc)
+        decodeDoc,
+  ) {
+    return FirestoreDocumentChange<ChatHistoryModelDocumentSnapshot>(
+      type: docChange.type,
+      oldIndex: docChange.oldIndex,
+      newIndex: docChange.newIndex,
+      doc: decodeDoc(docChange.doc),
+    );
+  }
+
+  final QuerySnapshot<ChatHistoryModel> snapshot;
+
+  @override
+  final List<ChatHistoryModelQueryDocumentSnapshot> docs;
+
+  @override
+  final List<FirestoreDocumentChange<ChatHistoryModelDocumentSnapshot>>
+      docChanges;
+}
+
+class ChatHistoryModelQueryDocumentSnapshot
+    extends FirestoreQueryDocumentSnapshot<ChatHistoryModel>
+    implements ChatHistoryModelDocumentSnapshot {
+  ChatHistoryModelQueryDocumentSnapshot._(this.snapshot)
+      : data = snapshot.data();
+
+  @override
+  final QueryDocumentSnapshot<ChatHistoryModel> snapshot;
+
+  @override
+  final ChatHistoryModel data;
+
+  @override
+  ChatHistoryModelDocumentReference get reference {
+    return ChatHistoryModelDocumentReference(snapshot.reference);
+  }
+}
+
+/// A collection reference object can be used for adding documents,
+/// getting document references, and querying for documents
+/// (using the methods inherited from Query).
 abstract class MessageModelCollectionReference
     implements
         MessageModelQuery,
         FirestoreCollectionReference<MessageModel, MessageModelQuerySnapshot> {
-  factory MessageModelCollectionReference([
-    FirebaseFirestore? firestore,
-  ]) = _$MessageModelCollectionReference;
+  factory MessageModelCollectionReference(
+    DocumentReference<ChatHistoryModel> parent,
+  ) = _$MessageModelCollectionReference;
 
   static MessageModel fromFirestore(
     DocumentSnapshot<Map<String, Object?>> snapshot,
@@ -121,6 +915,9 @@ abstract class MessageModelCollectionReference
   @override
   CollectionReference<MessageModel> get reference;
 
+  /// A reference to the containing [ChatHistoryModelDocumentReference] if this is a subcollection.
+  ChatHistoryModelDocumentReference get parent;
+
   @override
   MessageModelDocumentReference doc([String? id]);
 
@@ -131,11 +928,12 @@ abstract class MessageModelCollectionReference
 
 class _$MessageModelCollectionReference extends _$MessageModelQuery
     implements MessageModelCollectionReference {
-  factory _$MessageModelCollectionReference([FirebaseFirestore? firestore]) {
-    firestore ??= FirebaseFirestore.instance;
-
+  factory _$MessageModelCollectionReference(
+    DocumentReference<ChatHistoryModel> parent,
+  ) {
     return _$MessageModelCollectionReference._(
-      firestore.collection('messages').withConverter(
+      ChatHistoryModelDocumentReference(parent),
+      parent.collection('messages').withConverter(
             fromFirestore: MessageModelCollectionReference.fromFirestore,
             toFirestore: MessageModelCollectionReference.toFirestore,
           ),
@@ -143,8 +941,12 @@ class _$MessageModelCollectionReference extends _$MessageModelQuery
   }
 
   _$MessageModelCollectionReference._(
+    this.parent,
     CollectionReference<MessageModel> reference,
   ) : super(reference, $referenceWithoutCursor: reference);
+
+  @override
+  final ChatHistoryModelDocumentReference parent;
 
   String get path => reference.path;
 
@@ -191,7 +993,12 @@ abstract class MessageModelDocumentReference extends FirestoreDocumentReference<
 
   /// A reference to the [MessageModelCollectionReference] containing this document.
   MessageModelCollectionReference get parent {
-    return _$MessageModelCollectionReference(reference.firestore);
+    return _$MessageModelCollectionReference(
+      reference.parent.parent!.withConverter<ChatHistoryModel>(
+        fromFirestore: ChatHistoryModelCollectionReference.fromFirestore,
+        toFirestore: ChatHistoryModelCollectionReference.toFirestore,
+      ),
+    );
   }
 
   @override
@@ -236,7 +1043,12 @@ class _$MessageModelDocumentReference extends FirestoreDocumentReference<
 
   /// A reference to the [MessageModelCollectionReference] containing this document.
   MessageModelCollectionReference get parent {
-    return _$MessageModelCollectionReference(reference.firestore);
+    return _$MessageModelCollectionReference(
+      reference.parent.parent!.withConverter<ChatHistoryModel>(
+        fromFirestore: ChatHistoryModelCollectionReference.fromFirestore,
+        toFirestore: ChatHistoryModelCollectionReference.toFirestore,
+      ),
+    );
   }
 
   @override
@@ -1018,790 +1830,6 @@ class MessageModelQueryDocumentSnapshot
   }
 }
 
-/// A collection reference object can be used for adding documents,
-/// getting document references, and querying for documents
-/// (using the methods inherited from Query).
-abstract class ChatHistoryModelCollectionReference
-    implements
-        ChatHistoryModelQuery,
-        FirestoreCollectionReference<ChatHistoryModel,
-            ChatHistoryModelQuerySnapshot> {
-  factory ChatHistoryModelCollectionReference([
-    FirebaseFirestore? firestore,
-  ]) = _$ChatHistoryModelCollectionReference;
-
-  static ChatHistoryModel fromFirestore(
-    DocumentSnapshot<Map<String, Object?>> snapshot,
-    SnapshotOptions? options,
-  ) {
-    return ChatHistoryModel.fromJson({'id': snapshot.id, ...?snapshot.data()});
-  }
-
-  static Map<String, Object?> toFirestore(
-    ChatHistoryModel value,
-    SetOptions? options,
-  ) {
-    return {...value.toJson()}..remove('id');
-  }
-
-  @override
-  CollectionReference<ChatHistoryModel> get reference;
-
-  @override
-  ChatHistoryModelDocumentReference doc([String? id]);
-
-  /// Add a new document to this collection with the specified data,
-  /// assigning it a document ID automatically.
-  Future<ChatHistoryModelDocumentReference> add(ChatHistoryModel value);
-}
-
-class _$ChatHistoryModelCollectionReference extends _$ChatHistoryModelQuery
-    implements ChatHistoryModelCollectionReference {
-  factory _$ChatHistoryModelCollectionReference(
-      [FirebaseFirestore? firestore]) {
-    firestore ??= FirebaseFirestore.instance;
-
-    return _$ChatHistoryModelCollectionReference._(
-      firestore.collection('chat_history').withConverter(
-            fromFirestore: ChatHistoryModelCollectionReference.fromFirestore,
-            toFirestore: ChatHistoryModelCollectionReference.toFirestore,
-          ),
-    );
-  }
-
-  _$ChatHistoryModelCollectionReference._(
-    CollectionReference<ChatHistoryModel> reference,
-  ) : super(reference, $referenceWithoutCursor: reference);
-
-  String get path => reference.path;
-
-  @override
-  CollectionReference<ChatHistoryModel> get reference =>
-      super.reference as CollectionReference<ChatHistoryModel>;
-
-  @override
-  ChatHistoryModelDocumentReference doc([String? id]) {
-    assert(
-      id == null || id.split('/').length == 1,
-      'The document ID cannot be from a different collection',
-    );
-    return ChatHistoryModelDocumentReference(
-      reference.doc(id),
-    );
-  }
-
-  @override
-  Future<ChatHistoryModelDocumentReference> add(ChatHistoryModel value) {
-    return reference
-        .add(value)
-        .then((ref) => ChatHistoryModelDocumentReference(ref));
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is _$ChatHistoryModelCollectionReference &&
-        other.runtimeType == runtimeType &&
-        other.reference == reference;
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, reference);
-}
-
-abstract class ChatHistoryModelDocumentReference
-    extends FirestoreDocumentReference<ChatHistoryModel,
-        ChatHistoryModelDocumentSnapshot> {
-  factory ChatHistoryModelDocumentReference(
-          DocumentReference<ChatHistoryModel> reference) =
-      _$ChatHistoryModelDocumentReference;
-
-  DocumentReference<ChatHistoryModel> get reference;
-
-  /// A reference to the [ChatHistoryModelCollectionReference] containing this document.
-  ChatHistoryModelCollectionReference get parent {
-    return _$ChatHistoryModelCollectionReference(reference.firestore);
-  }
-
-  @override
-  Stream<ChatHistoryModelDocumentSnapshot> snapshots();
-
-  @override
-  Future<ChatHistoryModelDocumentSnapshot> get([GetOptions? options]);
-
-  @override
-  Future<void> delete();
-
-  /// Updates data on the document. Data will be merged with any existing
-  /// document data.
-  ///
-  /// If no document exists yet, the update will fail.
-  Future<void> update({
-    String userId,
-    FieldValue userIdFieldValue,
-  });
-
-  /// Updates fields in the current document using the transaction API.
-  ///
-  /// The update will fail if applied to a document that does not exist.
-  void transactionUpdate(
-    Transaction transaction, {
-    String userId,
-    FieldValue userIdFieldValue,
-  });
-}
-
-class _$ChatHistoryModelDocumentReference extends FirestoreDocumentReference<
-        ChatHistoryModel, ChatHistoryModelDocumentSnapshot>
-    implements ChatHistoryModelDocumentReference {
-  _$ChatHistoryModelDocumentReference(this.reference);
-
-  @override
-  final DocumentReference<ChatHistoryModel> reference;
-
-  /// A reference to the [ChatHistoryModelCollectionReference] containing this document.
-  ChatHistoryModelCollectionReference get parent {
-    return _$ChatHistoryModelCollectionReference(reference.firestore);
-  }
-
-  @override
-  Stream<ChatHistoryModelDocumentSnapshot> snapshots() {
-    return reference.snapshots().map(ChatHistoryModelDocumentSnapshot._);
-  }
-
-  @override
-  Future<ChatHistoryModelDocumentSnapshot> get([GetOptions? options]) {
-    return reference.get(options).then(ChatHistoryModelDocumentSnapshot._);
-  }
-
-  @override
-  Future<ChatHistoryModelDocumentSnapshot> transactionGet(
-      Transaction transaction) {
-    return transaction.get(reference).then(ChatHistoryModelDocumentSnapshot._);
-  }
-
-  Future<void> update({
-    Object? userId = _sentinel,
-    FieldValue? userIdFieldValue,
-  }) async {
-    assert(
-      userId == _sentinel || userIdFieldValue == null,
-      "Cannot specify both userId and userIdFieldValue",
-    );
-    final json = {
-      if (userId != _sentinel)
-        _$ChatHistoryModelFieldMap['userId']!: userId as String,
-      if (userIdFieldValue != null)
-        _$ChatHistoryModelFieldMap['userId']!: userIdFieldValue,
-    };
-
-    return reference.update(json);
-  }
-
-  void transactionUpdate(
-    Transaction transaction, {
-    Object? userId = _sentinel,
-    FieldValue? userIdFieldValue,
-  }) {
-    assert(
-      userId == _sentinel || userIdFieldValue == null,
-      "Cannot specify both userId and userIdFieldValue",
-    );
-    final json = {
-      if (userId != _sentinel)
-        _$ChatHistoryModelFieldMap['userId']!: userId as String,
-      if (userIdFieldValue != null)
-        _$ChatHistoryModelFieldMap['userId']!: userIdFieldValue,
-    };
-
-    transaction.update(reference, json);
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is ChatHistoryModelDocumentReference &&
-        other.runtimeType == runtimeType &&
-        other.parent == parent &&
-        other.id == id;
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, parent, id);
-}
-
-abstract class ChatHistoryModelQuery
-    implements QueryReference<ChatHistoryModel, ChatHistoryModelQuerySnapshot> {
-  @override
-  ChatHistoryModelQuery limit(int limit);
-
-  @override
-  ChatHistoryModelQuery limitToLast(int limit);
-
-  /// Perform an order query based on a [FieldPath].
-  ///
-  /// This method is considered unsafe as it does check that the field path
-  /// maps to a valid property or that parameters such as [isEqualTo] receive
-  /// a value of the correct type.
-  ///
-  /// If possible, instead use the more explicit variant of order queries:
-  ///
-  /// **AVOID**:
-  /// ```dart
-  /// collection.orderByFieldPath(
-  ///   FieldPath.fromString('title'),
-  ///   startAt: 'title',
-  /// );
-  /// ```
-  ///
-  /// **PREFER**:
-  /// ```dart
-  /// collection.orderByTitle(startAt: 'title');
-  /// ```
-  ChatHistoryModelQuery orderByFieldPath(
-    FieldPath fieldPath, {
-    bool descending = false,
-    Object? startAt,
-    Object? startAfter,
-    Object? endAt,
-    Object? endBefore,
-    ChatHistoryModelDocumentSnapshot? startAtDocument,
-    ChatHistoryModelDocumentSnapshot? endAtDocument,
-    ChatHistoryModelDocumentSnapshot? endBeforeDocument,
-    ChatHistoryModelDocumentSnapshot? startAfterDocument,
-  });
-
-  /// Perform a where query based on a [FieldPath].
-  ///
-  /// This method is considered unsafe as it does check that the field path
-  /// maps to a valid property or that parameters such as [isEqualTo] receive
-  /// a value of the correct type.
-  ///
-  /// If possible, instead use the more explicit variant of where queries:
-  ///
-  /// **AVOID**:
-  /// ```dart
-  /// collection.whereFieldPath(FieldPath.fromString('title'), isEqualTo: 'title');
-  /// ```
-  ///
-  /// **PREFER**:
-  /// ```dart
-  /// collection.whereTitle(isEqualTo: 'title');
-  /// ```
-  ChatHistoryModelQuery whereFieldPath(
-    FieldPath fieldPath, {
-    Object? isEqualTo,
-    Object? isNotEqualTo,
-    Object? isLessThan,
-    Object? isLessThanOrEqualTo,
-    Object? isGreaterThan,
-    Object? isGreaterThanOrEqualTo,
-    Object? arrayContains,
-    List<Object?>? arrayContainsAny,
-    List<Object?>? whereIn,
-    List<Object?>? whereNotIn,
-    bool? isNull,
-  });
-
-  ChatHistoryModelQuery whereDocumentId({
-    String? isEqualTo,
-    String? isNotEqualTo,
-    String? isLessThan,
-    String? isLessThanOrEqualTo,
-    String? isGreaterThan,
-    String? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<String>? whereIn,
-    List<String>? whereNotIn,
-  });
-  ChatHistoryModelQuery whereUserId({
-    String? isEqualTo,
-    String? isNotEqualTo,
-    String? isLessThan,
-    String? isLessThanOrEqualTo,
-    String? isGreaterThan,
-    String? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<String>? whereIn,
-    List<String>? whereNotIn,
-  });
-
-  ChatHistoryModelQuery orderByDocumentId({
-    bool descending = false,
-    String startAt,
-    String startAfter,
-    String endAt,
-    String endBefore,
-    ChatHistoryModelDocumentSnapshot? startAtDocument,
-    ChatHistoryModelDocumentSnapshot? endAtDocument,
-    ChatHistoryModelDocumentSnapshot? endBeforeDocument,
-    ChatHistoryModelDocumentSnapshot? startAfterDocument,
-  });
-
-  ChatHistoryModelQuery orderByUserId({
-    bool descending = false,
-    String startAt,
-    String startAfter,
-    String endAt,
-    String endBefore,
-    ChatHistoryModelDocumentSnapshot? startAtDocument,
-    ChatHistoryModelDocumentSnapshot? endAtDocument,
-    ChatHistoryModelDocumentSnapshot? endBeforeDocument,
-    ChatHistoryModelDocumentSnapshot? startAfterDocument,
-  });
-}
-
-class _$ChatHistoryModelQuery
-    extends QueryReference<ChatHistoryModel, ChatHistoryModelQuerySnapshot>
-    implements ChatHistoryModelQuery {
-  _$ChatHistoryModelQuery(
-    this._collection, {
-    required Query<ChatHistoryModel> $referenceWithoutCursor,
-    $QueryCursor $queryCursor = const $QueryCursor(),
-  }) : super(
-          $referenceWithoutCursor: $referenceWithoutCursor,
-          $queryCursor: $queryCursor,
-        );
-
-  final CollectionReference<Object?> _collection;
-
-  @override
-  Stream<ChatHistoryModelQuerySnapshot> snapshots([SnapshotOptions? options]) {
-    return reference
-        .snapshots()
-        .map(ChatHistoryModelQuerySnapshot._fromQuerySnapshot);
-  }
-
-  @override
-  Future<ChatHistoryModelQuerySnapshot> get([GetOptions? options]) {
-    return reference
-        .get(options)
-        .then(ChatHistoryModelQuerySnapshot._fromQuerySnapshot);
-  }
-
-  @override
-  ChatHistoryModelQuery limit(int limit) {
-    return _$ChatHistoryModelQuery(
-      _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.limit(limit),
-      $queryCursor: $queryCursor,
-    );
-  }
-
-  @override
-  ChatHistoryModelQuery limitToLast(int limit) {
-    return _$ChatHistoryModelQuery(
-      _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.limitToLast(limit),
-      $queryCursor: $queryCursor,
-    );
-  }
-
-  ChatHistoryModelQuery orderByFieldPath(
-    FieldPath fieldPath, {
-    bool descending = false,
-    Object? startAt = _sentinel,
-    Object? startAfter = _sentinel,
-    Object? endAt = _sentinel,
-    Object? endBefore = _sentinel,
-    ChatHistoryModelDocumentSnapshot? startAtDocument,
-    ChatHistoryModelDocumentSnapshot? endAtDocument,
-    ChatHistoryModelDocumentSnapshot? endBeforeDocument,
-    ChatHistoryModelDocumentSnapshot? startAfterDocument,
-  }) {
-    final query =
-        $referenceWithoutCursor.orderBy(fieldPath, descending: descending);
-    var queryCursor = $queryCursor;
-
-    if (startAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAt: const [],
-        startAtDocumentSnapshot: startAtDocument.snapshot,
-      );
-    }
-    if (startAfterDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: const [],
-        startAfterDocumentSnapshot: startAfterDocument.snapshot,
-      );
-    }
-    if (endAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endAt: const [],
-        endAtDocumentSnapshot: endAtDocument.snapshot,
-      );
-    }
-    if (endBeforeDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: const [],
-        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
-      );
-    }
-
-    if (startAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
-        startAtDocumentSnapshot: null,
-      );
-    }
-    if (startAfter != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
-        startAfterDocumentSnapshot: null,
-      );
-    }
-    if (endAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
-        endAtDocumentSnapshot: null,
-      );
-    }
-    if (endBefore != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
-        endBeforeDocumentSnapshot: null,
-      );
-    }
-    return _$ChatHistoryModelQuery(
-      _collection,
-      $referenceWithoutCursor: query,
-      $queryCursor: queryCursor,
-    );
-  }
-
-  ChatHistoryModelQuery whereFieldPath(
-    FieldPath fieldPath, {
-    Object? isEqualTo,
-    Object? isNotEqualTo,
-    Object? isLessThan,
-    Object? isLessThanOrEqualTo,
-    Object? isGreaterThan,
-    Object? isGreaterThanOrEqualTo,
-    Object? arrayContains,
-    List<Object?>? arrayContainsAny,
-    List<Object?>? whereIn,
-    List<Object?>? whereNotIn,
-    bool? isNull,
-  }) {
-    return _$ChatHistoryModelQuery(
-      _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.where(
-        fieldPath,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        arrayContains: arrayContains,
-        arrayContainsAny: arrayContainsAny,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-        isNull: isNull,
-      ),
-      $queryCursor: $queryCursor,
-    );
-  }
-
-  ChatHistoryModelQuery whereDocumentId({
-    String? isEqualTo,
-    String? isNotEqualTo,
-    String? isLessThan,
-    String? isLessThanOrEqualTo,
-    String? isGreaterThan,
-    String? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<String>? whereIn,
-    List<String>? whereNotIn,
-  }) {
-    return _$ChatHistoryModelQuery(
-      _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.where(
-        FieldPath.documentId,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
-      $queryCursor: $queryCursor,
-    );
-  }
-
-  ChatHistoryModelQuery whereUserId({
-    String? isEqualTo,
-    String? isNotEqualTo,
-    String? isLessThan,
-    String? isLessThanOrEqualTo,
-    String? isGreaterThan,
-    String? isGreaterThanOrEqualTo,
-    bool? isNull,
-    List<String>? whereIn,
-    List<String>? whereNotIn,
-  }) {
-    return _$ChatHistoryModelQuery(
-      _collection,
-      $referenceWithoutCursor: $referenceWithoutCursor.where(
-        _$ChatHistoryModelFieldMap['userId']!,
-        isEqualTo: isEqualTo,
-        isNotEqualTo: isNotEqualTo,
-        isLessThan: isLessThan,
-        isLessThanOrEqualTo: isLessThanOrEqualTo,
-        isGreaterThan: isGreaterThan,
-        isGreaterThanOrEqualTo: isGreaterThanOrEqualTo,
-        isNull: isNull,
-        whereIn: whereIn,
-        whereNotIn: whereNotIn,
-      ),
-      $queryCursor: $queryCursor,
-    );
-  }
-
-  ChatHistoryModelQuery orderByDocumentId({
-    bool descending = false,
-    Object? startAt = _sentinel,
-    Object? startAfter = _sentinel,
-    Object? endAt = _sentinel,
-    Object? endBefore = _sentinel,
-    ChatHistoryModelDocumentSnapshot? startAtDocument,
-    ChatHistoryModelDocumentSnapshot? endAtDocument,
-    ChatHistoryModelDocumentSnapshot? endBeforeDocument,
-    ChatHistoryModelDocumentSnapshot? startAfterDocument,
-  }) {
-    final query = $referenceWithoutCursor.orderBy(FieldPath.documentId,
-        descending: descending);
-    var queryCursor = $queryCursor;
-
-    if (startAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAt: const [],
-        startAtDocumentSnapshot: startAtDocument.snapshot,
-      );
-    }
-    if (startAfterDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: const [],
-        startAfterDocumentSnapshot: startAfterDocument.snapshot,
-      );
-    }
-    if (endAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endAt: const [],
-        endAtDocumentSnapshot: endAtDocument.snapshot,
-      );
-    }
-    if (endBeforeDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: const [],
-        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
-      );
-    }
-
-    if (startAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
-        startAtDocumentSnapshot: null,
-      );
-    }
-    if (startAfter != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
-        startAfterDocumentSnapshot: null,
-      );
-    }
-    if (endAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
-        endAtDocumentSnapshot: null,
-      );
-    }
-    if (endBefore != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
-        endBeforeDocumentSnapshot: null,
-      );
-    }
-
-    return _$ChatHistoryModelQuery(
-      _collection,
-      $referenceWithoutCursor: query,
-      $queryCursor: queryCursor,
-    );
-  }
-
-  ChatHistoryModelQuery orderByUserId({
-    bool descending = false,
-    Object? startAt = _sentinel,
-    Object? startAfter = _sentinel,
-    Object? endAt = _sentinel,
-    Object? endBefore = _sentinel,
-    ChatHistoryModelDocumentSnapshot? startAtDocument,
-    ChatHistoryModelDocumentSnapshot? endAtDocument,
-    ChatHistoryModelDocumentSnapshot? endBeforeDocument,
-    ChatHistoryModelDocumentSnapshot? startAfterDocument,
-  }) {
-    final query = $referenceWithoutCursor
-        .orderBy(_$ChatHistoryModelFieldMap['userId']!, descending: descending);
-    var queryCursor = $queryCursor;
-
-    if (startAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAt: const [],
-        startAtDocumentSnapshot: startAtDocument.snapshot,
-      );
-    }
-    if (startAfterDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: const [],
-        startAfterDocumentSnapshot: startAfterDocument.snapshot,
-      );
-    }
-    if (endAtDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endAt: const [],
-        endAtDocumentSnapshot: endAtDocument.snapshot,
-      );
-    }
-    if (endBeforeDocument != null) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: const [],
-        endBeforeDocumentSnapshot: endBeforeDocument.snapshot,
-      );
-    }
-
-    if (startAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAt: [...queryCursor.startAt, startAt],
-        startAtDocumentSnapshot: null,
-      );
-    }
-    if (startAfter != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        startAfter: [...queryCursor.startAfter, startAfter],
-        startAfterDocumentSnapshot: null,
-      );
-    }
-    if (endAt != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endAt: [...queryCursor.endAt, endAt],
-        endAtDocumentSnapshot: null,
-      );
-    }
-    if (endBefore != _sentinel) {
-      queryCursor = queryCursor.copyWith(
-        endBefore: [...queryCursor.endBefore, endBefore],
-        endBeforeDocumentSnapshot: null,
-      );
-    }
-
-    return _$ChatHistoryModelQuery(
-      _collection,
-      $referenceWithoutCursor: query,
-      $queryCursor: queryCursor,
-    );
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return other is _$ChatHistoryModelQuery &&
-        other.runtimeType == runtimeType &&
-        other.reference == reference;
-  }
-
-  @override
-  int get hashCode => Object.hash(runtimeType, reference);
-}
-
-class ChatHistoryModelDocumentSnapshot
-    extends FirestoreDocumentSnapshot<ChatHistoryModel> {
-  ChatHistoryModelDocumentSnapshot._(this.snapshot) : data = snapshot.data();
-
-  @override
-  final DocumentSnapshot<ChatHistoryModel> snapshot;
-
-  @override
-  ChatHistoryModelDocumentReference get reference {
-    return ChatHistoryModelDocumentReference(
-      snapshot.reference,
-    );
-  }
-
-  @override
-  final ChatHistoryModel? data;
-}
-
-class ChatHistoryModelQuerySnapshot extends FirestoreQuerySnapshot<
-    ChatHistoryModel, ChatHistoryModelQueryDocumentSnapshot> {
-  ChatHistoryModelQuerySnapshot._(
-    this.snapshot,
-    this.docs,
-    this.docChanges,
-  );
-
-  factory ChatHistoryModelQuerySnapshot._fromQuerySnapshot(
-    QuerySnapshot<ChatHistoryModel> snapshot,
-  ) {
-    final docs =
-        snapshot.docs.map(ChatHistoryModelQueryDocumentSnapshot._).toList();
-
-    final docChanges = snapshot.docChanges.map((change) {
-      return _decodeDocumentChange(
-        change,
-        ChatHistoryModelDocumentSnapshot._,
-      );
-    }).toList();
-
-    return ChatHistoryModelQuerySnapshot._(
-      snapshot,
-      docs,
-      docChanges,
-    );
-  }
-
-  static FirestoreDocumentChange<ChatHistoryModelDocumentSnapshot>
-      _decodeDocumentChange<T>(
-    DocumentChange<T> docChange,
-    ChatHistoryModelDocumentSnapshot Function(DocumentSnapshot<T> doc)
-        decodeDoc,
-  ) {
-    return FirestoreDocumentChange<ChatHistoryModelDocumentSnapshot>(
-      type: docChange.type,
-      oldIndex: docChange.oldIndex,
-      newIndex: docChange.newIndex,
-      doc: decodeDoc(docChange.doc),
-    );
-  }
-
-  final QuerySnapshot<ChatHistoryModel> snapshot;
-
-  @override
-  final List<ChatHistoryModelQueryDocumentSnapshot> docs;
-
-  @override
-  final List<FirestoreDocumentChange<ChatHistoryModelDocumentSnapshot>>
-      docChanges;
-}
-
-class ChatHistoryModelQueryDocumentSnapshot
-    extends FirestoreQueryDocumentSnapshot<ChatHistoryModel>
-    implements ChatHistoryModelDocumentSnapshot {
-  ChatHistoryModelQueryDocumentSnapshot._(this.snapshot)
-      : data = snapshot.data();
-
-  @override
-  final QueryDocumentSnapshot<ChatHistoryModel> snapshot;
-
-  @override
-  final ChatHistoryModel data;
-
-  @override
-  ChatHistoryModelDocumentReference get reference {
-    return ChatHistoryModelDocumentReference(snapshot.reference);
-  }
-}
-
 // **************************************************************************
 // JsonSerializableGenerator
 // **************************************************************************
@@ -1831,26 +1859,26 @@ Map<String, dynamic> _$ChatHistoryModelToJson(ChatHistoryModel instance) =>
 
 MessageModel _$MessageModelFromJson(Map<String, dynamic> json) => MessageModel(
       id: json['id'] as String,
-      createdBy: json['created_by'] as String,
+      createdBy: json['createdBy'] as String,
       data: MessageDataModel.fromJson(json['data'] as Map<String, dynamic>),
-      createdAt: dateTimeFromTimestamp(json['created_at'] as Timestamp?),
+      createdAt: dateTimeFromTimestamp(json['createdAt'] as Timestamp?),
       type: $enumDecode(_$MessageTypeEnumMap, json['type']),
     );
 
 const _$MessageModelFieldMap = <String, String>{
   'id': 'id',
-  'createdBy': 'created_by',
+  'createdBy': 'createdBy',
   'data': 'data',
-  'createdAt': 'created_at',
+  'createdAt': 'createdAt',
   'type': 'type',
 };
 
 Map<String, dynamic> _$MessageModelToJson(MessageModel instance) =>
     <String, dynamic>{
       'id': instance.id,
-      'created_by': instance.createdBy,
+      'createdBy': instance.createdBy,
       'data': instance.data.toJson(),
-      'created_at': instance.createdAt?.toIso8601String(),
+      'createdAt': instance.createdAt?.toIso8601String(),
       'type': _$MessageTypeEnumMap[instance.type]!,
     };
 

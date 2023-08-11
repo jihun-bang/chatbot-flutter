@@ -15,12 +15,14 @@ class ChatProvider extends ChangeNotifier {
 
   ChatProvider(this._chatUseCase, this._sessionId) {
     try {
-      chatHistoryRef.doc(_sessionId).get().then((value) {
-        if (value.data != null) {
-          final response = value.data;
-          _state = ChatHistory(messages: response!.messages);
-          notifyListeners();
-        }
+      chatHistoryRef
+          .doc(_sessionId)
+          .messages
+          .orderByCreatedAt()
+          .get()
+          .then((value) {
+        _state = ChatHistory(messages: value.docs.map((e) => e.data).toList());
+        notifyListeners();
       });
     } catch (e) {
       Logger.e(e);

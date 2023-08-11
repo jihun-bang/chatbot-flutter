@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "219036839161",
+    "project_id": "skmagic-chatbot-develop",
+    "storage_bucket": "skmagic-chatbot-develop.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:219036839161:android:728e13b41cafe320c2c628",
+        "android_client_info": {
+          "package_name": "com.skmagic.chatbot"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "219036839161-c90rhnemjh03upk8du4oh611h6v153vj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD-Ho_K6WRV95JuNu3P_SNxiqt591XiNLI"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "219036839161-c90rhnemjh03upk8du4oh611h6v153vj.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
