@@ -1,4 +1,3 @@
-import 'package:cloud_firestore_odm/cloud_firestore_odm.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'chat_request.g.dart';
@@ -6,8 +5,7 @@ part 'chat_request.g.dart';
 @JsonSerializable(explicitToJson: true, fieldRename: FieldRename.snake)
 class ChatRequestModel {
   /// 세션 ID
-  @Id()
-  String id;
+  String sessionId;
 
   /// 사용자 ID
   String userId;
@@ -16,7 +14,7 @@ class ChatRequestModel {
   String message;
 
   ChatRequestModel({
-    required this.id,
+    required this.sessionId,
     required this.userId,
     required this.message,
   });

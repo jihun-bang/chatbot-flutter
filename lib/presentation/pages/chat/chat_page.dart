@@ -1,6 +1,7 @@
 import 'package:chatbot/data/models/chat/chat_history.dart';
 import 'package:chatbot/presentation/provider/chat/chat_provider.dart';
 import 'package:chatbot/presentation/provider/chat/chat_state.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -19,11 +20,13 @@ class ChatPage extends StatefulWidget {
 }
 
 class _ChatPageState extends State<ChatPage> {
+  String _message = '';
   late final ChatProvider _provider;
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black38,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('AI 채팅'),
@@ -41,7 +44,43 @@ class _ChatPageState extends State<ChatPage> {
           };
         }),
       ),
-      bottomNavigationBar: SizedBox(height: 48, child: TextFormField()),
+      bottomNavigationBar: TextFormField(
+        style: Theme.of(context)
+            .textTheme
+            .bodyMedium!
+            .copyWith(color: Colors.white),
+        decoration: InputDecoration(
+            filled: true,
+            fillColor: Colors.black45,
+            enabledBorder:
+                const OutlineInputBorder(borderRadius: BorderRadius.zero),
+            border: const OutlineInputBorder(borderRadius: BorderRadius.zero),
+            focusedBorder:
+                const OutlineInputBorder(borderRadius: BorderRadius.zero),
+            hintText: '질문을 입력해주세요',
+            hintStyle: Theme.of(context)
+                .textTheme
+                .bodyMedium!
+                .copyWith(color: Colors.white),
+            suffixIcon: IconButton(
+              icon: const Icon(
+                CupertinoIcons.arrow_up_circle,
+                color: Colors.white70,
+              ),
+              onPressed: () {
+                if (_message.isNotEmpty) {
+                  _provider.chat(_message);
+                  setState(() {
+                    _message = '';
+                  });
+                }
+              },
+            ),
+        ),
+        onChanged: (message) {
+          _message = message;
+        },
+      ),
     );
   }
 

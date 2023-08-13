@@ -33,7 +33,7 @@ class ChatProvider extends ChangeNotifier {
 
   void chat(String message) {
     _chatUseCase.chat(ChatRequestModel(
-      id: 'test_session',
+      sessionId: 'test_session',
       userId: 'tester',
       message: message,
     ));

@@ -8,7 +8,7 @@ import 'dio_interceptor.dart';
 typedef ResponseConverter<T> = T Function(dynamic response);
 
 class DioClient with FirebaseCrashLogger {
-  String baseUrl = const String.fromEnvironment("BASE_URL");
+  String baseUrl = 'https://skmagic-chatbot-develop.du.r.appspot.com/api';
 
   late final Dio _dio;
 
