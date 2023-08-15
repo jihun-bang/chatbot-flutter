@@ -1889,7 +1889,8 @@ const _$MessageTypeEnumMap = {
 
 MessageDataModel _$MessageDataModelFromJson(Map<String, dynamic> json) =>
     MessageDataModel(
-      additionalKwargs: json['additional_kwargs'] as Map<String, dynamic>,
+      additionalKwargs:
+          json['additional_kwargs'] as Map<String, dynamic>? ?? const {},
       content: json['content'] as String,
     );
 

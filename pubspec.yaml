@@ -22,6 +22,7 @@ dependencies:
   firebase_crashlytics: ^3.3.4
   get_it: ^7.6.0
   provider: ^6.0.5
+  freezed_annotation:
 
 dev_dependencies:
   flutter_test:
@@ -31,6 +32,7 @@ dev_dependencies:
   json_serializable: ^6.6.2
   copy_with_extension_gen: ^5.0.2
   cloud_firestore_odm_generator: ^1.0.0-dev.64
+  freezed:
 
 flutter:
   uses-material-design: true

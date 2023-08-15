@@ -73,7 +73,7 @@ class MessageDataModel {
   String content;
 
   MessageDataModel({
-    required this.additionalKwargs,
+    this.additionalKwargs = const {},
     required this.content,
   });
 
