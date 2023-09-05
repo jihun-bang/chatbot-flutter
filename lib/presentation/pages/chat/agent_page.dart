@@ -1,30 +1,30 @@
 import 'package:chatbot/data/models/chat/chat_history.dart';
 import 'package:chatbot/domain/entities/chat/chat_intent.dart';
 import 'package:chatbot/domain/entities/chat/chat_state.dart';
-import 'package:chatbot/presentation/provider/chat/chat_provider.dart';
+import 'package:chatbot/presentation/provider/chat/agent_provider.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../dependencies_injection.dart';
 
-class ChatPage extends StatefulWidget {
+class AgentPage extends StatefulWidget {
   final String sessionId;
 
-  const ChatPage({
+  const AgentPage({
     super.key,
     required this.sessionId,
   });
 
   @override
-  State<ChatPage> createState() => _ChatPageState();
+  State<AgentPage> createState() => _AgentPageState();
 }
 
-class _ChatPageState extends State<ChatPage> {
+class _AgentPageState extends State<AgentPage> {
   final _chatFieldController = TextEditingController();
   final _scrollController = ScrollController();
   String _message = '';
-  late final ChatProvider _provider;
+  late final AgentProvider _provider;
 
   @override
   void initState() {
@@ -69,14 +69,14 @@ class _ChatPageState extends State<ChatPage> {
       backgroundColor: Colors.black38,
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: const Text('AI 채팅'),
+        title: const Text('Agent 채팅'),
       ),
-      body: ChangeNotifierProvider<ChatProvider>(
+      body: ChangeNotifierProvider<AgentProvider>(
         create: (_) {
-          _provider = ChatProvider(sl(), widget.sessionId);
+          _provider = AgentProvider(sl(), widget.sessionId);
           return _provider;
         },
-        child: Consumer<ChatProvider>(builder: (_, __, ___) {
+        child: Consumer<AgentProvider>(builder: (_, __, ___) {
           if (_scrollController.hasClients) {
             _scrollToBottom();
           }

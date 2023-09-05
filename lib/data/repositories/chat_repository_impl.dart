@@ -21,4 +21,16 @@ class ChatRepositoryImpl implements ChatRepository {
       },
     );
   }
+
+  @override
+  Future<Either<Failure, String>> agent(ChatRequestModel params) async {
+    final response = await chatRemoteDatasource.agent(params);
+
+    return response.fold(
+      (failure) => Left(failure),
+      (response) {
+        return Right(response.output);
+      },
+    );
+  }
 }

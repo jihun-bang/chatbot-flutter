@@ -1,5 +1,5 @@
 import 'package:chatbot/dependencies_injection.dart';
-import 'package:chatbot/presentation/pages/chat/chat_page.dart';
+import 'package:chatbot/presentation/pages/chat/agent_page.dart';
 import 'package:flutter/material.dart';
 
 import 'common/firebase/firebase_services.dart';
@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
         useMaterial3: true,
       ),
-      home: const ChatPage(sessionId: 'test_session'),
+      home: const SelectionArea(child: AgentPage(sessionId: 'test_session5')),
     );
   }
 }

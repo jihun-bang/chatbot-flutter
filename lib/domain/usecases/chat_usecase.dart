@@ -11,4 +11,7 @@ class ChatUseCase {
 
   Future<Either<Failure, String>> chat(ChatRequestModel params) =>
       _repo.chat(params);
+
+  Future<Either<Failure, String>> agent(ChatRequestModel params) =>
+      _repo.agent(params);
 }
